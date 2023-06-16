@@ -1,12 +1,12 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-// import { signOut } from "firebase/auth";
 import React from "react";
 import { useQuery } from "react-query";
 import { Navigate, useParams } from "react-router-dom";
-// import auth from "../../authentication/firebase.init";
 import PageLoading from "../Shared/PageLoading";
 import CheckoutForm from "./CheckoutForm";
+import { useContext } from "react";
+import { AuthContext } from "../../Contexts/AuthProvider";
 
 const stripePromise = loadStripe(
   "pk_test_51L0jdfEX10hfloLN3xChLQaggRYrnUD7grOhFPbZ6Mt2A6DpNY82CZdItGpgXOb2byOxBZyo0jpwIuXntF5efWST00cKVrtWS6"
@@ -14,19 +14,20 @@ const stripePromise = loadStripe(
 
 const Payment = () => {
   const { id } = useParams();
+  const { logOut } = useContext(AuthContext);
 
   const { data: parts, isLoading } = useQuery(["parts", id], () =>
-    fetch(`http://localhost:5000/order/${id}`, {
+    fetch(` https://car-parts-server-six.vercel.app/order/${id}`, {
       method: "GET",
-      // headers: {
-      //     authorization: `Bearer ${localStorage.getItem('accessToken')}`
-      // },
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     }).then((res) => {
-      // if (res.status === 401 || res.status === 403) {
-      //     localStorage.removeItem('accessToken')
-      //     signOut(auth)
-      //     Navigate('/login')
-      // }
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem("accessToken");
+        logOut();
+        Navigate("/login");
+      }
       return res.json();
     })
   );

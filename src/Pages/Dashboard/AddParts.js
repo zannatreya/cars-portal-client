@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 const AddParts = () => {
   const [imageLoading, setImageLoading] = useState(false);
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -42,21 +42,21 @@ const AddParts = () => {
             importedBy: user.email,
           };
           // console.log(importedPart);
-          fetch("http://localhost:5000/part", {
+          fetch(" https://car-parts-server-six.vercel.app/part", {
             method: "POST",
             headers: {
               "content-type": "application/json",
-              //   authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(importedPart),
           })
             .then((res) => {
-              //   if (res.status === 401 || res.status === 403) {
-              //     localStorage.removeItem("accessToken");
-              // signOut(auth);
-              navigate("/login");
-              setImageLoading(false);
-              //   }
+              if (res.status === 401 || res.status === 403) {
+                localStorage.removeItem("accessToken");
+                logOut();
+                navigate("/login");
+                setImageLoading(false);
+              }
               return res.json();
             })
             .then((data) => {

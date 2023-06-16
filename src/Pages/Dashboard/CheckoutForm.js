@@ -1,7 +1,9 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 // import { signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Contexts/AuthProvider";
 // import auth from "../../authentication/firebase.init";
 
 const CheckoutForm = ({ parts }) => {
@@ -13,6 +15,7 @@ const CheckoutForm = ({ parts }) => {
   const [processing, setProcessing] = useState(false);
   const [transID, setTransID] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const { logOut } = useContext(AuthContext);
 
   const {
     _id,
@@ -26,11 +29,11 @@ const CheckoutForm = ({ parts }) => {
   } = parts;
 
   useEffect(() => {
-    fetch("http://localhost:5000/create-payment-intent", {
+    fetch(" https://car-parts-server-six.vercel.app/create-payment-intent", {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        // authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: JSON.stringify({ price: totalPrice }),
     })
@@ -96,20 +99,20 @@ const CheckoutForm = ({ parts }) => {
         phone,
       };
 
-      fetch(`http://localhost:5000/order/${_id}`, {
+      fetch(` https://car-parts-server-six.vercel.app/order/${_id}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          //   authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: JSON.stringify(payment),
       })
         .then((res) => {
-          //   if (res.status === 401 || res.status === 403) {
-          //     localStorage.removeItem("accessToken");
-          //     signOut(auth);
-          //     navigate("/login");
-          //   }
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("accessToken");
+            logOut();
+            navigate("/login");
+          }
           return res.json();
         })
         .then((data) => {

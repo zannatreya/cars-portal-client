@@ -22,7 +22,7 @@ const Purchase = () => {
     isLoading,
     refetch,
   } = useQuery(["product", id], () =>
-    fetch(`http://localhost:5000/part/${id}`, {
+    fetch(` https://car-parts-server-six.vercel.app/part/${id}`, {
       method: "GET",
       // headers: {
       //   authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -56,7 +56,7 @@ const Purchase = () => {
       notes: data.notes,
     };
     // console.log(submittedOrder);
-    fetch("http://localhost:5000/order", {
+    fetch(" https://car-parts-server-six.vercel.app/order", {
       method: "POST",
       headers: {
         "content-type": "application/json",

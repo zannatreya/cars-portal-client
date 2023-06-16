@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Contexts/AuthProvider";
+import useProfile from "../../../hooks/useProfile";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [usersProfile] = useProfile(user);
+
   const handleLogout = () => {
     logOut()
       .then(() => {})
@@ -15,20 +18,66 @@ const Header = () => {
       <li>
         <Link to="/">Home</Link>
       </li>
-
+      {user?.uid && (
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+      )}
       <li>
         <Link to="/blogs">Blogs</Link>
       </li>
+      <li>
+        <Link to="/portfolio">My Portfolio</Link>
+      </li>
 
       {user?.uid ? (
-        <>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          <li>
-            <button onClick={handleLogout}>Sign Out</button>
-          </li>
-        </>
+        <div>
+          <div className="dropdown lg:dropdown-end ">
+            <label tabIndex="0" className="avatar online">
+              <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img
+                  src={
+                    usersProfile?.image
+                      ? usersProfile?.image
+                      : "https://i.ibb.co/5sWZQdg/default-images.jpg"
+                  }
+                  alt=""
+                />
+              </div>
+            </label>
+            <ul
+              tabIndex="0"
+              className="dropdown-content menu p-5 shadow bg-base-100 rounded-box w-40 lg:w-52"
+            >
+              <div className="avatar">
+                <div className="w-16 mx-auto rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  <img
+                    src={
+                      usersProfile?.image
+                        ? usersProfile?.image
+                        : "https://i.ibb.co/5sWZQdg/default-images.jpg"
+                    }
+                    alt=""
+                  />
+                </div>
+              </div>
+              <Link
+                to="/dashboard/my-profile"
+                className="text-center my-4 font-bold hover:text-primary-focus"
+              >
+                {user?.displayName}
+              </Link>
+              <p className="text-center">
+                <button
+                  className="rounded btn btn-secondary btn-sm btn-outline text-base-100"
+                  onClick={handleLogout}
+                >
+                  Sign out
+                </button>
+              </p>
+            </ul>
+          </div>
+        </div>
       ) : (
         <li>
           <Link to="/login">Login</Link>

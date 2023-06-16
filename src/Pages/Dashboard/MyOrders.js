@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import PageLoading from "../Shared/PageLoading";
-// import CancelOrderModal from "./CancelOrderModal";
 import { useContext } from "react";
 import { AuthContext } from "../../Contexts/AuthProvider";
 import CancelOrderModal from "./CancelOrderModal";
 
 const MyOrders = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const [deletingOrder, setDeletingOrder] = useState(null);
 
   const {
@@ -17,17 +16,20 @@ const MyOrders = () => {
     isLoading,
     refetch,
   } = useQuery("order", () =>
-    fetch(`http://localhost:5000/order?email=${user?.email}`, {
-      method: "GET",
-      //   headers: {
-      //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      //   },
-    }).then((res) => {
-      //   if (res.status === 401 || res.status === 403) {
-      //     signOut(auth);
-      //     localStorage.removeItem("accessToken");
-      //     navigate("/login");
-      //   }
+    fetch(
+      ` https://car-parts-server-six.vercel.app/order?email=${user?.email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    ).then((res) => {
+      if (res.status === 401 || res.status === 403) {
+        logOut();
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
       return res.json();
     })
   );

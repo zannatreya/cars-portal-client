@@ -1,14 +1,15 @@
-// import { signOut } from "firebase/auth";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-// import auth from "../../authentication/firebase.init";
+import { useContext } from "react";
+import { AuthContext } from "../../Contexts/AuthProvider";
 
 const DeleteToolModal = ({ deletingTool, setDeletingTool, refetch }) => {
   const navigate = useNavigate();
+  const { logOut } = useContext(AuthContext);
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/part/${id}`, {
+    fetch(` https://car-parts-server-six.vercel.app/part/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
@@ -16,12 +17,12 @@ const DeleteToolModal = ({ deletingTool, setDeletingTool, refetch }) => {
       },
     })
       .then((res) => {
-        // if (res.status === 401 || res.status === 403) {
-        //   console.log(res);
-        //   signOut(auth);
-        //   localStorage.removeItem("accessToken");
-        //   navigate("/login");
-        // }
+        if (res.status === 401 || res.status === 403) {
+          console.log(res);
+          logOut();
+          localStorage.removeItem("accessToken");
+          navigate("/login");
+        }
         return res.json();
       })
       .then((data) => {

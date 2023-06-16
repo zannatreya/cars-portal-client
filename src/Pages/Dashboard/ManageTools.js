@@ -1,29 +1,31 @@
-// import { signOut } from "firebase/auth";
 import React from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-// import auth from "../../authentication/firebase.init";
 import PageLoading from "../../Pages/Shared/PageLoading";
 import RowOfTools from "./RowOfTools";
+import { useContext } from "react";
+import { AuthContext } from "../../Contexts/AuthProvider";
 
 const ManageTools = () => {
   const navigate = useNavigate();
+  const { logOut } = useContext(AuthContext);
+
   const {
     data: tools,
     isLoading,
     refetch,
   } = useQuery("tools", () =>
-    fetch("http://localhost:5000/part", {
+    fetch(" https://car-parts-server-six.vercel.app/part", {
       method: "GET",
-      // headers: {
-      //   authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      // },
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     }).then((res) => {
-      // if (res.status === 401 || res.status === 403) {
-      //   signOut(auth);
-      //   localStorage.removeItem("accessToken");
-      //   navigate("/login");
-      // }
+      if (res.status === 401 || res.status === 403) {
+        logOut();
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
       return res.json();
     })
   );

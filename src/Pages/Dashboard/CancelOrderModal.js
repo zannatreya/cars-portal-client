@@ -1,25 +1,28 @@
 import React from "react";
+import { useContext } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Contexts/AuthProvider";
 
 const CancelOrderModal = ({ deletingOrder, setDeletingOrder, refetch }) => {
   const navigate = useNavigate();
+  const { logOut } = useContext(AuthContext);
   // console.log(deletingOrder);
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/order/${id}`, {
+    fetch(` https://car-parts-server-six.vercel.app/order/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
-        // authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     })
       .then((res) => {
-        // if (res.status === 401 || res.status === 403) {
-        //   signOut(auth);
-        //   localStorage.removeItem("accessToken");
-        //   navigate("/login");
-        // }
+        if (res.status === 401 || res.status === 403) {
+          logOut();
+          localStorage.removeItem("accessToken");
+          navigate("/login");
+        }
         return res.json();
       })
       .then((data) => {

@@ -19,7 +19,7 @@ const AddReview = () => {
     reset,
   } = useForm();
   // const [user, isLoading] = useAuthState(auth);
-  const { user, isLoading } = useContext(AuthContext);
+  const { user, isLoading, logOut } = useContext(AuthContext);
 
   const [usersProfile, isUserLoading] = useProfile(user);
   const [imageLoading, setImageLoading] = useState(false);
@@ -61,7 +61,7 @@ const AddReview = () => {
     };
     // console.log(review);
 
-    fetch("http://localhost:5000/review", {
+    fetch(" https://car-parts-server-six.vercel.app/review", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -70,11 +70,11 @@ const AddReview = () => {
       body: JSON.stringify(review),
     })
       .then((res) => {
-        // if (res.status === 401 || res.status === 403) {
-        //   localStorage.removeItem("accessToken");
-        //   signOut(auth);
-        //   navigate("/login");
-        // }
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem("accessToken");
+          logOut();
+          navigate("/login");
+        }
         return res.json();
       })
       .then((data) => {

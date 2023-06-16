@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import auth from "../../authentication/firebase.init";
 import PageLoading from "../Shared/PageLoading";
 import { useForm } from "react-hook-form";
-// import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
 import { toast } from "react-hot-toast";
@@ -13,8 +10,7 @@ import { AuthContext } from "../../Contexts/AuthProvider";
 const MyProfile = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
-  // const [user, isLoading] = useAuthState(auth);
-  const { user, isLoading } = useContext(AuthContext);
+  const { user, isLoading, logOut } = useContext(AuthContext);
   const [usersProfile, isUserLoading] = useProfile(user);
   const [imageLoading, setImageLoading] = useState(false);
   const [imgURL, setImgURL] = useState("");
@@ -25,12 +21,12 @@ const MyProfile = () => {
 
   const handleUploadImage = (e) => {
     setImageLoading(true);
-    const img = e.target.files[0];
+    const image = e.target.files[0];
     const formData = new FormData();
-    formData.append("image", img);
+    formData.append("image", image);
 
     fetch(
-      `https://api.imgbb.com/1/upload?key=c1e87660595242c0175f82bb850d3e15`,
+      `https://api.imgbb.com/1/upload?key=3f11ccaa30b2e9b97d8f1ccb0370d98f`,
       {
         method: "POST",
         body: formData,
@@ -59,29 +55,29 @@ const MyProfile = () => {
     // send to database
     const email = user.email;
     if (email) {
-      fetch(`http://localhost:5000/profile/${email}`, {
+      fetch(` https://car-parts-server-six.vercel.app/profile/${email}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          // authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: JSON.stringify(profileInfo),
       })
         .then((res) => {
-          // if (res.status === 401 || res.status === 403) {
-          //   localStorage.removeItem("accessToken");
-          //   signOut(auth);
-          //   navigate("/login");
-          // }
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("accessToken");
+            logOut();
+            navigate("/login");
+          }
           res.json();
         })
         .then((data) => {
           console.log(data);
-          if (data.acknowledged) {
-            reset();
-            setImageLoading(false);
-            toast.success("Profile updated successfully.");
-          }
+          // if (data.acknowledged) {
+          // reset();
+          setImageLoading(false);
+          toast.success("Profile updated successfully.");
+          // }
         });
     }
   };

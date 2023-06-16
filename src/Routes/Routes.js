@@ -18,6 +18,7 @@ import Payment from "../Pages/Dashboard/Payment";
 import AddReview from "../Pages/Dashboard/AddReview";
 import AdminRoute from "./AdminRoute";
 import AllUsers from "../Pages/Dashboard/AllUsers";
+import MyPortfolio from "../Pages/MyPortfolio/MyPortfolio";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <SignUp></SignUp>,
+      },
+      {
+        path: "/portfolio",
+        element: <MyPortfolio></MyPortfolio>,
       },
       {
         path: "/purchase/:id",

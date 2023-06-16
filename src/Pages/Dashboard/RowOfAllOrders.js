@@ -12,11 +12,11 @@ const RowOfAllOrders = ({ order, refetch, index }) => {
       emailNotification: order.email,
       shipped: true,
     };
-    fetch(`http://localhost:5000/all-order/${id}`, {
+    fetch(` https://car-parts-server-six.vercel.app/all-order/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        // authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: JSON.stringify(orderStatus),
     })
