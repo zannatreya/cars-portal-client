@@ -11,14 +11,14 @@ import MongodbIcon from "../../assets/icons/mongodb.png";
 
 const MyPortfolio = () => {
   const projects = [
-    // {
-    //   id: 1,
-    //   name: "Auto Ment",
-    //   description:
-    //     "This is a website for inventory management, which will help to manage all inventories",
-    //   img: "https://i.ibb.co/0MJPGB5/AutoMent.png",
-    //   link: "https://automent-4fd77.web.app/",
-    // },
+    {
+      id: 1,
+      name: "Auto Ment",
+      description:
+        "This is a website for inventory management, which will help to manage all inventories",
+      img: "https://i.ibb.co/0MJPGB5/AutoMent.png",
+      link: "https://inventory-management-b5c59.web.app/",
+    },
     {
       id: 2,
       name: "Travel Portal",

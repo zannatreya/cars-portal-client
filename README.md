@@ -2,9 +2,9 @@
 
 This project is for `Car Parts Manufacturer` who manufacture the parts of Car. This project will help them to show their `Parts` in website so that `Customer` can easily find their needed parts.
 
-## [Live Site Link]()
+## [Live Site Link](https://car-parts-51bde.web.app/)
 
-Click the link to view my live site: []()
+Click the link to view my live site: [https://car-parts-51bde.web.app](https://car-parts-51bde.web.app/)
 
 ### `Admin Credentials`
 
